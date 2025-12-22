@@ -1,36 +1,44 @@
-name: Check Live Channels
+name: Check Live Channels Weekly
 
 on:
   schedule:
-    # 这里的格式是：分 时 日 月 周
-    # 下面的配置表示：每周日 00:00 (UTC 时间) 执行
-    - cron: '0 0 * * 0' 
-  workflow_dispatch: # 保留手动触发按钮，方便随时测试
+    # 每周日凌晨 00:00 UTC 执行一次
+    - cron: '0 0 * * 0'
+  push:
+    branches: [ main ]
+  workflow_dispatch: 
 
 jobs:
-  build:
+  check_job:
     runs-on: ubuntu-latest
+    # 设置权限，允许 Actions 提交代码回仓库
+    permissions:
+      contents: write
 
     steps:
     - name: 检出代码
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: 设置 Python 环境
-      uses: actions/setup-python@v4
+    - name: 设置 Python
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
     - name: 安装依赖
-      run: |
-        pip install requests
+      run: pip install requests
 
-    - name: 执行检查脚本
+    - name: 运行 6000+ 多线程检查脚本
       run: python check_sources.py
 
-    - name: 提交并推送结果
+    - name: 提交更新后的 output.txt
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add output.txt
-        # 只有在文件有变动时才提交，防止报错
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Update output.txt with valid sources" && git push)
+        # 检查是否有内容变动，避免空提交报错
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "Weekly update: Filtered valid live sources"
+          git push
+        else
+          echo "No changes to commit"
+        fi
