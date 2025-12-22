@@ -1,11 +1,11 @@
 name: Check Live Channels
 
 on:
-  push:
-    branches: [ main ]
   schedule:
-    - cron: '0 0 * * *' # 每天凌晨自动运行一次
-  workflow_dispatch: # 支持手动点击运行
+    # 这里的格式是：分 时 日 月 周
+    # 下面的配置表示：每周日 00:00 (UTC 时间) 执行
+    - cron: '0 0 * * 0' 
+  workflow_dispatch: # 保留手动触发按钮，方便随时测试
 
 jobs:
   build:
