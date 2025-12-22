@@ -5,72 +5,69 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # 配置
 INPUT_FILE = 'channels.txt'
 OUTPUT_FILE = 'output.txt'
-MAX_WORKERS = 20  # 同时开启的线程数，建议 20-30 之间
-TIMEOUT = 5       # 每个链接的超时时间
+MAX_WORKERS = 30  # 6000条数据建议 30 线程，兼顾速度与稳定性
+TIMEOUT = 5
 
-def check_live_source(item):
-    """
-    检查单个直播源
-    item: (name, url)
-    返回: (name, url, is_valid)
-    """
-    name, url = item
+def check_live_source(name, url, index):
+    """检测函数，返回索引以便后续恢复顺序"""
     try:
         # 尝试 HEAD 请求
         response = requests.head(url, timeout=TIMEOUT, allow_redirects=True)
         if response.status_code == 200:
-            return name, url, True
+            return index, name, url, True
     except:
         pass
     
     try:
-        # 备选 GET 请求（只读头部）
+        # 备选 GET 请求
         response = requests.get(url, timeout=TIMEOUT, stream=True)
-        return name, url, response.status_code == 200
+        return index, name, url, response.status_code == 200
     except:
-        return name, url, False
+        return index, name, url, False
 
 def main():
     if not os.path.exists(INPUT_FILE):
-        print("错误: channels.txt 不存在")
         return
 
-    # 1. 预处理：去重
-    unique_tasks = {}
+    tasks = []
+    seen_urls = set()
+    
+    # 1. 读取文件并去重，同时记录原始索引
     with open(INPUT_FILE, 'r', encoding='utf-8') as f:
-        for line in f:
+        for idx, line in enumerate(f):
             line = line.strip()
             if line and ',' in line:
                 name, url = line.split(',', 1)
-                if url not in unique_tasks:
-                    unique_tasks[url] = name
+                if url not in seen_urls:
+                    seen_urls.add(url)
+                    tasks.append((name, url, idx))
 
-    print(f"去重完成，剩余 {len(unique_tasks)} 个源，开始多线程检测...")
+    print(f"总计 {len(tasks)} 个唯一源，开始并发检测...")
 
-    # 2. 多线程执行
-    valid_sources = []
-    task_list = [(name, url) for url, name in unique_tasks.items()]
-    
+    results = []
+    # 2. 多线程检测
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        # 提交所有任务
-        future_to_url = {executor.submit(check_live_source, task): task for task in task_list}
+        future_to_task = {executor.submit(check_live_source, n, u, i): i for n, u, i in tasks}
         
-        done_count = 0
-        for future in as_completed(future_to_url):
-            name, url, is_valid = future.result()
-            done_count += 1
-            if is_valid:
-                valid_sources.append(f"{name},{url}")
+        count = 0
+        for future in as_completed(future_to_task):
+            res = future.result() # (index, name, url, is_valid)
+            if res[3]: # 如果有效
+                results.append(res)
             
-            # 每检测 100 条打印一次进度
-            if done_count % 100 == 0:
-                print(f"进度: {done_count}/{len(task_list)}...")
+            count += 1
+            if count % 100 == 0:
+                print(f"已完成: {count}/{len(tasks)}")
 
-    # 3. 写入结果
+    # 3. 按照原始文件的索引排序，保证顺序不变
+    results.sort(key=lambda x: x[0])
+
+    # 4. 写入文件
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(valid_sources))
+        for _, name, url, _ in results:
+            f.writelines(f"{name},{url}\n")
 
-    print(f"检测结束！有效源: {len(valid_sources)}，结果已保存至 {OUTPUT_FILE}")
+    print(f"检测完毕，有效源已写入 {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     main()
