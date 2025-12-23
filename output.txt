@@ -61,7 +61,6 @@ CCTV-14少儿,http://yp.qqqtv.top/1/api.php?id=CCTV-14%E5%B0%91%E5%84%BF&auth=66
 CCTV-15音乐,http://yp.qqqtv.top/1/api.php?id=CCTV-15%E9%9F%B3%E4%B9%90&auth=666858
 CCTV-16奥林匹克,http://yp.qqqtv.top/1/api.php?id=CCTV-16%E5%A5%A5%E6%9E%97%E5%8C%B9%E5%85%8B&auth=666858
 CCTV-17农业农村,http://yp.qqqtv.top/1/api.php?id=CCTV-17%E5%86%9C%E4%B8%9A%E5%86%9C%E6%9D%91&auth=666858
-CGTN,http://yp.qqqtv.top/1/api.php?id=CGTN&auth=666858
 CGTN纪录,http://yp.qqqtv.top/1/api.php?id=CGTN%E7%BA%AA%E5%BD%95&auth=666858
 CGTN法语,http://yp.qqqtv.top/1/api.php?id=CGTN%E6%B3%95%E8%AF%AD&auth=666858
 CGTN阿拉伯语,http://yp.qqqtv.top/1/api.php?id=CGTN%E9%98%BF%E6%8B%89%E4%BC%AF%E8%AF%AD&auth=666858
@@ -96,9 +95,4 @@ CHC家庭影院,http://yp.qqqtv.top/1/api.php?id=CHC%E5%AE%B6%E5%BA%AD%E5%BD%B1%
 江西卫视HD,http://yp.qqqtv.top/1/api.php?id=%E6%B1%9F%E8%A5%BF%E5%8D%AB%E8%A7%86HD&auth=666858
 重庆卫视HD,http://yp.qqqtv.top/1/api.php?id=%E9%87%8D%E5%BA%86%E5%8D%AB%E8%A7%86HD&auth=666858
 四川卫视HD,http://yp.qqqtv.top/1/api.php?id=%E5%9B%9B%E5%B7%9D%E5%8D%AB%E8%A7%86HD&auth=666858
-广西卫视HD,http://yp.qqqtv.top/1/api.php?id=%E5%B9%BF%E8%A5%BF%E5%8D%AB%E8%A7%86HD&auth=666858
-河南卫视HD,http://yp.qqqtv.top/1/api.php?id=%E6%B2%B3%E5%8D%97%E5%8D%AB%E8%A7%86HD&auth=666858
-陕西卫视HD,http://yp.qqqtv.top/1/api.php?id=%E9%99%95%E8%A5%BF%E5%8D%AB%E8%A7%86HD&auth=666858
-贵州卫视HD,http://yp.qqqtv.top/1/api.php?id=%E8%B4%B5%E5%B7%9E%E5%8D%AB%E8%A7%86HD&auth=666858
-吉林卫视HD,http://yp.qqqtv.top/1/api.php?id=%E5%90%89%E6%9E%97%E5%8D%AB%E8%A7%86HD&auth=666858
-海南卫视HD,http://yp.qqqtv.top/1/api.php?id=%E6%B5%B7%E5%8D%97%E5%8D%AB%E8%A7%86HD&auth=666858
+湖南卫视,http://yp.qqqtv.top/1/api.php?id=%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86&auth=666858
