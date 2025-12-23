@@ -2,8 +2,8 @@ name: Check Live Channels Weekly
 
 on:
   schedule:
-    # 每周日凌晨 00:00 UTC 执行一次
-    - cron: '0 0 * * 0'
+    # 每日凌晨 00:00 UTC 执行一次
+    - cron: '0 0 * * *'
   push:
     branches: [ main ]
   workflow_dispatch: 
